@@ -15,7 +15,7 @@ Fortnite-Notifier is a Telegram bot that notifies you when specific items appear
 
 ## Tech Stack
 
-- Python
+- Go
 - Telegram Bot API 
 - Fortnite API (e.g., [fortnite-api.com](https://fortnite-api.com/))
 - PostgreSQL for storing user preferneces
