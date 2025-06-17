@@ -17,7 +17,7 @@ type Config struct {
 
 func GetConfig() *Config {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Could not load env vars")
+		log.Fatalf("Could not load env vars: %s", err)
 	}
 	return &Config{
 		FN_API_KEY:      os.Getenv("FN_API_KEY"),
