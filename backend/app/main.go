@@ -1,18 +1,18 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Could not load env variables")
-	}
-	router := gin.Default()
-	router.Run(os.Getenv("PORT"))
+func sayHello(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "Hello world!",
+	})
+}
 
+func main() {
+	cfg := GetConfig()
+	router := gin.Default()
+	router.GET("/", sayHello)
+	router.Run(cfg.PORT)
 }
