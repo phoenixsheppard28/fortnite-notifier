@@ -34,15 +34,16 @@ func Webhook(c *gin.Context) {
 		})
 		return
 	}
-
+	var msg_string string
 	switch update.Message.Command() {
 	case "help":
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "response to help")
-		bot.Send(msg)
+		msg_string = "response to help"
 
 	default:
-
+		msg_string = ""
 	}
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	bot.Send(msg)
 
 	c.JSON(200, gin.H{
 		"message": "Hello webhook!",
