@@ -14,6 +14,12 @@ func SayHello(c *gin.Context) {
 	})
 }
 func Webhook(c *gin.Context) {
+	botAny, exists := c.Get("bot")
+	if !exists {
+		log.Fatal("Could not retrieve telegram bot")
+	}
+	bot := botAny.(*tgbotapi.BotAPI)
+
 	var update tgbotapi.Update
 
 	if err := c.ShouldBindJSON(&update); err != nil {
@@ -31,10 +37,10 @@ func Webhook(c *gin.Context) {
 
 	switch update.Message.Command() {
 	case "help":
-		c.JSON(200, gin.H{
-			"message": "/help",
-		})
-		return
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "response to help")
+		bot.Send(msg)
+
+	default:
 
 	}
 

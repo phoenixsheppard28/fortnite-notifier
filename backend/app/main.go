@@ -17,6 +17,8 @@ func main() {
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
 	router := gin.Default()
+	router.Use(BotMiddleWare(bot))
+
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
 	router.Run(cfg.PORT)
