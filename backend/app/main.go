@@ -7,12 +7,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func sayHello(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Hello world!",
-	})
-}
-
 func main() {
 	cfg := GetConfig()
 	bot, err := tgbotapi.NewBotAPI(cfg.TELEGRAM_TOKEN)
@@ -21,9 +15,12 @@ func main() {
 	}
 	bot.Debug = true //  logs all interactions w telegram servers
 	log.Printf("Authorized on account %s", bot.Self.UserName)
-	// tgbotapi.NewWebhook()
 
 	router := gin.Default()
-	router.GET("/", sayHello)
+	router.POST("/webhook", Webhook)
+	router.GET("/", SayHello)
 	router.Run(cfg.PORT)
+
+	SetupWebhook(bot, cfg)
+
 }
