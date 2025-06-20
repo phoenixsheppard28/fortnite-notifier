@@ -1,0 +1,5 @@
+{
+    "help":"👋 Welcome to Fortnite-Notifier!* \n Stay on top of the Fortnite Item Shop with real-time alerts for your favorite skins and cosmetics. \n *Available Commands:*",
+    "default":"That command doesent exist",
+    "no_command":"This bot does not support traditional chatting. Type /help to see available commands"
+}
