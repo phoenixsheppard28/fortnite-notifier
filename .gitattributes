@@ -1,11 +1,1 @@
-# Ignore all of frontend except the app directory
-/frontend/package.json linguist-vendored
-/frontend/tsconfig.json linguist-vendored
-/frontend/tailwind.config.ts linguist-vendored
-/frontend/postcss.config.js linguist-vendored
-/frontend/public/** linguist-vendored
-/frontend/node_modules/** linguist-vendored
-/frontend/components/** linguist-vendored
-/frontend/styles/** linguist-vendored
-/frontend/.next/** linguist-vendored
 /frontend linguist-vendored
