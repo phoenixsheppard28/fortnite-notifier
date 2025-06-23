@@ -19,3 +19,10 @@ func DBMiddleWare(db *gorm.DB) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func CfgMiddleWare(cfg *Config) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("cfg", cfg)
+		c.Next()
+	}
+}

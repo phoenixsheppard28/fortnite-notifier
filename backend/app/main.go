@@ -33,6 +33,7 @@ func main() {
 	router := gin.Default()
 	router.Use(BotMiddleWare(bot))
 	router.Use(DBMiddleWare(db))
+	router.Use(CfgMiddleWare(cfg))
 
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
