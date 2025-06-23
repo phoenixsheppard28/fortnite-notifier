@@ -1,1 +1,8 @@
-/frontend/** linguist-vendored
+/frontend/.next/** linguist-vendored
+/frontend/components/** linguist-vendored
+/frontend/hooks/** linguist-vendored
+/frontend/lib/** linguist-vendored
+/frontend/node_modules/** linguist-vendored
+/frontend/public/** linguist-vendored
+/frontend/styles/** linguist-vendored
+/frontend/hooks/** linguist-vendored
