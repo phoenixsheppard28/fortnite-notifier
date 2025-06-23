@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/phoenixsheppard28/fortnite-notifier/tree/main/backend/app/static"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
@@ -18,9 +20,19 @@ func main() {
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
 	static.LoadStaticResponses()
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  cfg.DB_STRING,
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{})
+
+	if err != nil {
+		log.Fatalf("Couod not intiialize database connection")
+	}
+	db.AutoMigrate(&User{}) // auto create table if it doesent exist
 
 	router := gin.Default()
 	router.Use(BotMiddleWare(bot))
+	router.Use(DBMiddleWare(db))
 
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
