@@ -37,8 +37,10 @@ func main() {
 
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
-	router.Run(cfg.PORT)
 
+	// apiGroup := router.Group("api")
+
+	router.Run(cfg.PORT)
 	SetupWebhook(bot, cfg)
 
 }
