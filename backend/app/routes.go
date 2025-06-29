@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"slices"
 
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -163,4 +164,9 @@ func RebuildItemDatabase(c *gin.Context) {
 		return
 	}
 
+	for _, item := range apiResponse.Items {
+		if slices.Contains(item.GameplayTags, "Cosmetics.Source.ItemShop") {
+			// need to create schema then add it to that with transaction
+		}
+	}
 }
