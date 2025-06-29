@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 
@@ -104,4 +106,61 @@ func Webhook(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "Hello webhook!",
 	})
+}
+
+func RebuildItemDatabase(c *gin.Context) {
+	dbAny, exists := c.Get("db")
+	if !exists {
+		log.Println("Could not retrieve db")
+		return
+	}
+	db := dbAny.(*gorm.DB)
+	cfgAny, exists := c.Get("cfg")
+	if !exists {
+		log.Println("Could not retireve config")
+		return
+	}
+	cfg := cfgAny.(*Config)
+
+	req, err := http.NewRequest("GET", cfg.FN_API_ENDPOINT, nil)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Error creating request",
+		})
+		return
+	}
+	req.Header.Add("Authorization", cfg.FN_API_KEY)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Error sending request to fortnite API",
+		})
+		return
+	}
+	if resp.StatusCode != 200 {
+		c.JSON(500, gin.H{
+			"message": "Error getting itms from fortnite API",
+		})
+	}
+
+	defer resp.Body.Close() // runs at the end of this function
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Error: Could not read body of api response",
+		})
+		return
+	}
+
+	var apiResponse FortniteAPIResponse
+
+	err = json.Unmarshal(body, &apiResponse)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Incoming fortnite API response could not bind to set struct",
+		})
+		return
+	}
+
 }
