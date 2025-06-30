@@ -123,7 +123,7 @@ func RebuildItemDatabase(c *gin.Context) {
 	}
 	cfg := cfgAny.(*Config)
 
-	req, err := http.NewRequest("GET", cfg.FN_API_ENDPOINT, nil)
+	req, err := http.NewRequest("GET", cfg.FN_API_ENDPOINT+"v2/items/list", nil)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"message": "Error creating request",
@@ -141,8 +141,9 @@ func RebuildItemDatabase(c *gin.Context) {
 	}
 	if resp.StatusCode != 200 {
 		c.JSON(500, gin.H{
-			"message": "Error getting itms from fortnite API",
+			"message": "Error getting items from fortnite API",
 		})
+		return
 	}
 
 	defer resp.Body.Close() // runs at the end of this function
@@ -160,13 +161,44 @@ func RebuildItemDatabase(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, gin.H{
 			"message": "Incoming fortnite API response could not bind to set struct",
+			"error":   err.Error(),
 		})
 		return
 	}
 
-	for _, item := range apiResponse.Items {
-		if slices.Contains(item.GameplayTags, "Cosmetics.Source.ItemShop") {
-			// need to create schema then add it to that with transaction
+	db.Transaction(func(tx *gorm.DB) error {
+		tx.Where("1=1").Delete(&FortniteItem{}) // clear table
+
+		var itemsToInsert []FortniteItem
+		for _, item := range apiResponse.Items {
+			if slices.Contains(item.GameplayTags, "Cosmetics.Source.ItemShop") && item.ReleaseDate != nil {
+				var dbItem = FortniteItem{
+					ID:     item.ID,
+					Name:   item.Name,
+					Type:   item.Type.Name,
+					Price:  item.Price,
+					Rarity: item.Rarity.ID,
+					Image:  item.Images.Icon,
+				}
+				if item.Set != nil {
+					dbItem.SetName = item.Set.Name
+				}
+				if item.LastAppearance != nil {
+					dbItem.LastAppearance = *item.LastAppearance
+				}
+
+				itemsToInsert = append(itemsToInsert, dbItem)
+
+			}
 		}
-	}
+		if err := tx.CreateInBatches(&itemsToInsert, 100).Error; err != nil {
+			c.JSON(500, gin.H{
+				"message": "Could not rebuild item database",
+				"error":   err.Error(),
+			})
+			return err
+		}
+
+		return nil
+	})
 }

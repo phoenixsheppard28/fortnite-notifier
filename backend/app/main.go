@@ -29,6 +29,7 @@ func main() {
 		log.Fatalf("Couod not intiialize database connection")
 	}
 	db.AutoMigrate(&User{}) // auto create table if it doesent exist
+	db.AutoMigrate(&FortniteItem{})
 
 	router := gin.Default()
 	router.Use(BotMiddleWare(bot))
@@ -38,7 +39,8 @@ func main() {
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
 
-	// apiGroup := router.Group("api")
+	apiGroup := router.Group("api")
+	apiGroup.POST("/item/rebuild", RebuildItemDatabase)
 
 	router.Run(cfg.PORT)
 	SetupWebhook(bot, cfg)
