@@ -112,13 +112,17 @@ func Webhook(c *gin.Context) {
 func RebuildItemDatabase(c *gin.Context) {
 	dbAny, exists := c.Get("db")
 	if !exists {
-		log.Println("Could not retrieve db")
+		c.JSON(500, gin.H{
+			"message": "Could not retrieve database",
+		})
 		return
 	}
 	db := dbAny.(*gorm.DB)
 	cfgAny, exists := c.Get("cfg")
 	if !exists {
-		log.Println("Could not retireve config")
+		c.JSON(500, gin.H{
+			"message": "Could not retrieve config",
+		})
 		return
 	}
 	cfg := cfgAny.(*Config)
@@ -201,4 +205,37 @@ func RebuildItemDatabase(c *gin.Context) {
 
 		return nil
 	})
+}
+
+func UserTrackItem(c *gin.Context) {
+	// dbAny, exists := c.Get("db")
+	// if !exists {
+	// 	log.Println("Could not retrieve db")
+	// 	return
+	// }
+	// db := dbAny.(*gorm.DB)
+	var reqbody AddItemApiRequest
+
+	defer c.Request.Body.Close() // is this needed?
+
+	body, err := io.ReadAll(c.Request.Body)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Could not read request body",
+		})
+		return
+	}
+
+	if err = json.Unmarshal(body, &reqbody); err != nil {
+		c.JSON(400, gin.H{
+			"message": "Could not bind request body to set struct",
+		})
+		return
+	}
+	// check if its valid ids with db id column
+
+	// User := User{TrackedItemIds: reqbody.Item_IDs}
+	// db.Create()
+
 }

@@ -26,3 +26,17 @@ func CfgMiddleWare(cfg *Config) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func AdminAuthMiddleWare(cfg *Config) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		api_key := c.GetHeader("x-api-key")
+		if api_key != cfg.ADMIN_API_KEY {
+			c.AbortWithStatusJSON(401, gin.H{
+				"message": "unauthorized",
+			})
+			return
+		}
+		c.Next()
+	}
+}

@@ -39,8 +39,8 @@ func main() {
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
 
-	apiGroup := router.Group("api")
-	apiGroup.POST("/item/rebuild", RebuildItemDatabase)
+	adminGroup := router.Group("api/admin", AdminAuthMiddleWare(cfg))
+	adminGroup.POST("/item/rebuild", RebuildItemDatabase)
 
 	router.Run(cfg.PORT)
 	SetupWebhook(bot, cfg)

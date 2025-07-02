@@ -16,6 +16,7 @@ type Config struct {
 	PORT               string
 	PUBLIC_URL         string
 	WEBHOOK_OBFUSCATOR string
+	ADMIN_API_KEY      string
 }
 
 func GetConfig() *Config {
@@ -30,6 +31,7 @@ func GetConfig() *Config {
 		PORT:               os.Getenv("PORT"),
 		PUBLIC_URL:         os.Getenv("PUBLIC_URL"),
 		WEBHOOK_OBFUSCATOR: os.Getenv("WEBHOOK_OBFUSCATOR"),
+		ADMIN_API_KEY:      os.Getenv("ADMIN_API_KEY"),
 	}
 }
 

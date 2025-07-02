@@ -5,8 +5,9 @@ import (
 )
 
 type User struct {
-	ID   int64     `gorm:"column:id;type:int64;primaryKey;;not null; unique"`
-	UUID uuid.UUID `gorm:"uniqueIndex;column:uuid;type:uuid;default:uuid_generate_v4();not null"`
+	ID             int64     `gorm:"column:id;type:int64;primaryKey;;not null; unique"`
+	UUID           uuid.UUID `gorm:"uniqueIndex;column:uuid;type:uuid;default:uuid_generate_v4();not null"`
+	TrackedItemIds []string  `gorm:"column:tracked_item_ids;type:text"`
 }
 
 type FortniteItem struct {
@@ -20,13 +21,15 @@ type FortniteItem struct {
 	LastAppearance string `gorm:"column:last_appearance;type:varchar"` // form yyyy-mm-dd
 }
 
+// _____________________ FORNITE API ___________________________
+
 type FortniteAPIResponse struct {
 	Result bool       `json:"result"`
 	Pages  int        `json:"pages"`
 	Items  []Cosmetic `json:"items"`
 }
 
-// {'audio', 'set', 'releaseDate', 'path', 'battlepass', 'lastAppearance', 'builtInEmote', 'series', 'video'}
+// {'audio', 'set', 'releaseDate', 'path', 'battlepass', 'lastAppearance', 'builtInEmote', 'series', 'video'} nullables
 type Cosmetic struct {
 	ID               string          `json:"id"`
 	Type             GenericIdName   `json:"type"`
@@ -106,4 +109,10 @@ type BuiltInEmote struct {
 	Series      *GenericIdName `json:"series"`
 	Images      Images         `json:"images"`
 	Video       *string        `json:"video"` // nullable in your example
+}
+
+// ____________________ My API ________________
+
+type AddItemApiRequest struct {
+	Item_IDs []string `json:"item_ids"`
 }
