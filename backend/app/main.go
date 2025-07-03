@@ -28,8 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Couod not intiialize database connection")
 	}
-	db.AutoMigrate(&User{}) // auto create table if it doesent exist
-	db.AutoMigrate(&FortniteItem{})
+	db.AutoMigrate(&User{}, &FortniteItem{}) // auto create tables if they dont exist
 
 	router := gin.Default()
 	router.Use(BotMiddleWare(bot))

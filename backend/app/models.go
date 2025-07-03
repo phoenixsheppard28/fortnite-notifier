@@ -1,24 +1,28 @@
 package main
 
-import (
-	"github.com/google/uuid"
-)
+import "github.com/google/uuid"
 
 type User struct {
-	ID             int64     `gorm:"column:id;type:int64;primaryKey;;not null; unique"`
-	UUID           uuid.UUID `gorm:"uniqueIndex;column:uuid;type:uuid;default:uuid_generate_v4();not null"`
-	TrackedItemIds []string  `gorm:"column:tracked_item_ids;type:text"`
+	ID           int64      `gorm:"column:id;type:int64;primaryKey;not null; unique"`                      // telegram account id num
+	UUID         uuid.UUID  `gorm:"uniqueIndex;column:uuid;type:uuid;default:uuid_generate_v4();not null"` // could depreciate after we do telegram tracking
+	TrackedItems []UserItem `gorm:"foreignKey:UserId"`
+}
+
+type UserItem struct { // join table
+	UserId int64  `gorm:"column:user_id;type:int64;index"`
+	ItemId string `gorm:"column:item_id;type:varchar;size:255;index"`
 }
 
 type FortniteItem struct {
-	ID             string `gorm:"column:id;type:varchar;primaryKey;not null"`
-	Name           string `gorm:"column:name;type:varchar;not null"`
-	Type           string `gorm:"column:type;type:varchar"`
-	Price          uint   `gorm:"column:price;type:uint"`
-	Rarity         string `gorm:"column:rarity;type:varchar;"`         // maybe should make an enum
-	Image          string `gorm:"column:image;type:varchar;"`          // link to image
-	SetName        string `gorm:"column:set;type:varchar"`             // should maybe make it a jsonb since the set is an object, can be null
-	LastAppearance string `gorm:"column:last_appearance;type:varchar"` // form yyyy-mm-dd
+	ID             string     `gorm:"column:id;type:varchar;primaryKey;not null"`
+	Name           string     `gorm:"column:name;type:varchar;not null"`
+	Type           string     `gorm:"column:type;type:varchar"`
+	Price          uint       `gorm:"column:price;type:uint"`
+	Rarity         string     `gorm:"column:rarity;type:varchar;"`         // maybe should make an enum
+	Image          string     `gorm:"column:image;type:varchar;"`          // link to image
+	SetName        string     `gorm:"column:set;type:varchar"`             // should maybe make it a jsonb since the set is an object, can be null
+	LastAppearance string     `gorm:"column:last_appearance;type:varchar"` // form yyyy-mm-dd
+	Trackedby      []UserItem `gorm:"foreignKey:ItemId"`
 }
 
 // _____________________ FORNITE API ___________________________
