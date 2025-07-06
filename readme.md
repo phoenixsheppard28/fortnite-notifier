@@ -9,8 +9,7 @@ Fortnite-Notifier is a Telegram bot that notifies you when specific items appear
 - Track Fortnite items by name
 - Receive real-time Telegram notifications when items appear
 - Daily checks of the Item Shop
-- Easy to configure and extend
-
+- Absolute minimum user data stored 
 ---
 
 ## Tech Stack
