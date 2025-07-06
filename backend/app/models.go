@@ -9,8 +9,8 @@ type User struct {
 }
 
 type UserItem struct { // join table
-	UserId int64  `gorm:"column:user_id;type:int64;index"`
-	ItemId string `gorm:"column:item_id;type:varchar;size:255;index"`
+	UserId int64  `gorm:"column:user_id;type:int64;index;primaryKey"`
+	ItemId string `gorm:"column:item_id;type:varchar;size:255;index;primaryKey"`
 }
 
 type FortniteItem struct {
