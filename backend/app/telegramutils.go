@@ -13,7 +13,7 @@ func create(update *tgbotapi.Update, db *gorm.DB) (bool, error) {
 	user_id := update.Message.From.ID
 	var user = User{ID: user_id}
 
-	user_exists, err := user_exists(user_id, db)
+	user_exists, err := User_exists(user_id, db)
 	if err != nil {
 		return false, err
 	}
@@ -32,7 +32,7 @@ func start(update *tgbotapi.Update, db *gorm.DB) (string, error) {
 	// returns the uuid associated with the user so their link can be constructed
 	user_id := update.Message.From.ID
 	var user = User{ID: user_id}
-	user_exists, err := user_exists(user_id, db)
+	user_exists, err := User_exists(user_id, db)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +46,7 @@ func start(update *tgbotapi.Update, db *gorm.DB) (string, error) {
 	return user.UUID.String(), nil
 }
 
-func user_exists(user_id int64, db *gorm.DB) (bool, error) {
+func User_exists(user_id int64, db *gorm.DB) (bool, error) {
 	var user = User{ID: user_id}
 	result := db.First(&user)
 	if result.Error != nil {
@@ -63,7 +63,7 @@ func rotate(update *tgbotapi.Update, db *gorm.DB) (bool, error) {
 	// returns true if it rotated, false if it did not (aka user does not exist)
 	user_id := update.Message.From.ID
 	var user = User{ID: user_id}
-	user_exists, err := user_exists(user_id, db)
+	user_exists, err := User_exists(user_id, db)
 	if err != nil {
 		return false, err
 	}

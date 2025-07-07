@@ -1,0 +1,2 @@
+switch from uuid based auth to actual telegram auth -- will require jwt stuff
+    remove uuid from the users table

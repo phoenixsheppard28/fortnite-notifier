@@ -6,11 +6,12 @@ type User struct {
 	ID           int64      `gorm:"column:id;type:int64;primaryKey;not null; unique"`                      // telegram account id num
 	UUID         uuid.UUID  `gorm:"uniqueIndex;column:uuid;type:uuid;default:uuid_generate_v4();not null"` // could depreciate after we do telegram tracking
 	TrackedItems []UserItem `gorm:"foreignKey:UserId"`
+	FirstName    string     `gorm:"column:first_name;type:varchar;"`
 }
 
 type UserItem struct { // join table
 	UserId int64  `gorm:"column:user_id;type:int64;index;primaryKey"`
-	ItemId string `gorm:"column:item_id;type:varchar;size:255;index;primaryKey"`
+	ItemId string `gorm:"column:item_id;type:varchar;index;primaryKey"`
 }
 
 type FortniteItem struct {

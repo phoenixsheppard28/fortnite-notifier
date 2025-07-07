@@ -17,6 +17,8 @@ type Config struct {
 	PUBLIC_URL         string
 	WEBHOOK_OBFUSCATOR string
 	ADMIN_API_KEY      string
+	FRONTEND_URL       string
+	JWT_SECRET         string
 }
 
 func GetConfig() *Config {
@@ -32,6 +34,8 @@ func GetConfig() *Config {
 		PUBLIC_URL:         os.Getenv("PUBLIC_URL"),
 		WEBHOOK_OBFUSCATOR: os.Getenv("WEBHOOK_OBFUSCATOR"),
 		ADMIN_API_KEY:      os.Getenv("ADMIN_API_KEY"),
+		FRONTEND_URL:       os.Getenv("FRONTEND_URL"),
+		JWT_SECRET:         os.Getenv("JWT_SECRET"),
 	}
 }
 

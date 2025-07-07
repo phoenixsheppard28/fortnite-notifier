@@ -31,15 +31,16 @@ func main() {
 	db.AutoMigrate(&User{}, &FortniteItem{}) // auto create tables if they dont exist
 
 	router := gin.Default()
-	router.Use(BotMiddleWare(bot))
-	router.Use(DBMiddleWare(db))
-	router.Use(CfgMiddleWare(cfg))
+	router.Use(BotMiddleWare(bot), DBMiddleWare(db), CfgMiddleWare(cfg))
 
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
 
-	adminGroup := router.Group("api/admin", AdminAuthMiddleWare(cfg))
+	adminGroup := router.Group("/admin", AdminAuthMiddleWare(cfg))
 	adminGroup.POST("/item/rebuild", RebuildItemDatabase)
+
+	authGroup := router.Group("/auth")
+	authGroup.GET("/telegram", TelegramAuthHandler)
 
 	router.Run(cfg.PORT)
 	SetupWebhook(bot, cfg)

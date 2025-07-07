@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Zap, Target, Bell, Trophy, ArrowRight, Users, Shield, Gamepad2 } from "lucide-react"
 import Link from "next/link"
+import TelegramLoginButton from "@/components/TelegramLoginButtom"
 
 export default function LandingPage() {
   return (
@@ -53,21 +54,9 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold"
-            >
-              <Zap className="w-5 h-5 mr-2" />
-              Connect Telegram Bot
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg"
-            >
-              View Demo
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+           
+              <TelegramLoginButton/>
+            
           </div>
 
           {/* Stats */}
