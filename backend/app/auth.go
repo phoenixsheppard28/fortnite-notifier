@@ -82,7 +82,14 @@ func TelegramAuthHandler(c *gin.Context) {
 		c.Redirect(303, cfg.FRONTEND_URL+"/users/not-created")
 	}
 	// now we know user exists, we can issue a jwt and return them to the main page with it
-
+	jwt, err := createJWT(params["first_name"], intUserId, cfg)
+	if err != nil {
+		c.AbortWithStatusJSON(500, gin.H{
+			"message": "internal server error, could not create JWT",
+		})
+		return
+	}
+	c.Redirect(303, cfg.FRONTEND_URL+"?token="+jwt)
 }
 
 func createJWT(username string, id int64, cfg *Config) (string, error) {
