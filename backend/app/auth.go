@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -60,9 +61,9 @@ func TelegramAuthHandler(c *gin.Context) {
 
 	if calculated_hash != params["hash"] {
 		c.AbortWithStatusJSON(400, gin.H{
-			"message":         "unsuccessfal authentication",
-			"hash":            params["hash"],
-			"calculated_hash": calculated_hash,
+			"message":          "unsuccessfal authentication",
+			"hash":             params["hash"],
+			"calculated _hash": calculated_hash,
 		})
 		return
 	}
@@ -93,13 +94,18 @@ func TelegramAuthHandler(c *gin.Context) {
 }
 
 func createJWT(username string, id int64, cfg *Config) (string, error) {
-	secret_key := []byte(cfg.JWT_SECRET)
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username": username,
-		"id":       id,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(),
-	})
-	tokenstring, err := token.SignedString(secret_key)
+	jwt_secret := []byte(cfg.JWT_SECRET)
+	claims := JWTClaims{
+		Username: username,
+		Id:       id,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenstring, err := token.SignedString(jwt_secret)
 	if err != nil {
 		return "", err
 	}
@@ -107,17 +113,57 @@ func createJWT(username string, id int64, cfg *Config) (string, error) {
 }
 
 func VerifyJWT(c *gin.Context) {
+	cfgAny, exists := c.Get("cfg")
+	if !exists {
+		c.AbortWithStatusJSON(500, gin.H{
+			"message": "internal server error",
+		})
+		return
+	}
+	cfg := cfgAny.(*Config)
+
+	jwt_secret := []byte(cfg.JWT_SECRET)
+
+	var req JWTRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.AbortWithStatusJSON(400, gin.H{
+			"message": "could not bind to set struct",
+		})
+		return
+	}
+
+	token, err := jwt.ParseWithClaims(req.Token, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || method.Alg() != jwt.SigningMethodHS256.Alg() {
+			return nil, errors.New("invalid algorithm or signing method")
+		}
+		return jwt_secret, nil
+	})
+
+	if err != nil {
+		if errors.Is(err, jwt.ErrTokenExpired) {
+			c.JSON(401, gin.H{
+				"valid":   false,
+				"message": "Token expired",
+			})
+			return
+		}
+		c.JSON(401, gin.H{
+			"valid":   false,
+			"message": "other error in validating claims",
+		})
+		return
+	}
+	_, ok := token.Claims.(*JWTClaims)
+	if !ok {
+		c.JSON(401, gin.H{
+			"valid":   false,
+			"message": "invalid claims format",
+		})
+		return
+	}
+
 	c.JSON(200, gin.H{
 		"valid": true,
 	})
-	return
-	// cfgAny, exists := c.Get("cfg")
-	// if !exists {
-	// 	c.AbortWithStatusJSON(500, gin.H{
-	// 		"message": "internal server error",
-	// 	})
-	// 	return
-	// }
-	// cfg := cfgAny.(*Config)
-
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
@@ -125,5 +126,11 @@ type AddItemApiRequest struct {
 }
 
 type JWTRequest struct {
-	token string `json:"token"`
+	Token string `json:"token"`
+}
+
+type JWTClaims struct {
+	Username string `json:"username,omitempty"`
+	Id       int64  `json:"id,omitempty"`
+	jwt.RegisteredClaims
 }

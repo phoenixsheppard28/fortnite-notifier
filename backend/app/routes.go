@@ -218,7 +218,7 @@ func UserTrackItem(c *gin.Context) {
 
 	defer c.Request.Body.Close() // is this needed?
 
-	body, err := io.ReadAll(c.Request.Body)
+	body, err := io.ReadAll(c.Request.Body) // should i switch to shouldbindjson
 
 	if err != nil {
 		c.JSON(400, gin.H{
