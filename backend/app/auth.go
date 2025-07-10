@@ -105,3 +105,19 @@ func createJWT(username string, id int64, cfg *Config) (string, error) {
 	}
 	return tokenstring, nil
 }
+
+func VerifyJWT(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"valid": true,
+	})
+	return
+	// cfgAny, exists := c.Get("cfg")
+	// if !exists {
+	// 	c.AbortWithStatusJSON(500, gin.H{
+	// 		"message": "internal server error",
+	// 	})
+	// 	return
+	// }
+	// cfg := cfgAny.(*Config)
+
+}

@@ -1,6 +1,8 @@
 package main
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type User struct {
 	ID           int64      `gorm:"column:id;type:int64;primaryKey;not null; unique"`                      // telegram account id num
@@ -120,4 +122,8 @@ type BuiltInEmote struct {
 
 type AddItemApiRequest struct {
 	Item_IDs []string `json:"item_ids"`
+}
+
+type JWTRequest struct {
+	token string `json:"token"`
 }

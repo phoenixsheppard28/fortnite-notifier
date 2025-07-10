@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/phoenixsheppard28/fortnite-notifier/tree/main/backend/app/static"
@@ -31,7 +32,7 @@ func main() {
 	db.AutoMigrate(&User{}, &FortniteItem{}) // auto create tables if they dont exist
 
 	router := gin.Default()
-	router.Use(BotMiddleWare(bot), DBMiddleWare(db), CfgMiddleWare(cfg))
+	router.Use(BotMiddleWare(bot), DBMiddleWare(db), CfgMiddleWare(cfg), cors.Default())
 
 	router.POST("/webhook", Webhook)
 	router.GET("/", SayHello)
@@ -41,6 +42,7 @@ func main() {
 
 	authGroup := router.Group("/auth")
 	authGroup.GET("/telegram", TelegramAuthHandler)
+	authGroup.POST("/verify-jwt", VerifyJWT)
 
 	router.Run(cfg.PORT)
 	SetupWebhook(bot, cfg)
