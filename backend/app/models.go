@@ -125,10 +125,6 @@ type AddItemApiRequest struct {
 	Item_IDs []string `json:"item_ids"`
 }
 
-type JWTRequest struct {
-	Token string `json:"token"`
-}
-
 type JWTClaims struct {
 	Username string `json:"username,omitempty"`
 	Id       int64  `json:"id,omitempty"`

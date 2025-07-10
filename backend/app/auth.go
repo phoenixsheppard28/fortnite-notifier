@@ -4,7 +4,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -113,56 +112,7 @@ func createJWT(username string, id int64, cfg *Config) (string, error) {
 }
 
 func VerifyJWT(c *gin.Context) {
-	cfgAny, exists := c.Get("cfg")
-	if !exists {
-		c.AbortWithStatusJSON(500, gin.H{
-			"message": "internal server error",
-		})
-		return
-	}
-	cfg := cfgAny.(*Config)
-
-	jwt_secret := []byte(cfg.JWT_SECRET)
-
-	var req JWTRequest
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{
-			"message": "could not bind to set struct",
-		})
-		return
-	}
-
-	token, err := jwt.ParseWithClaims(req.Token, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || method.Alg() != jwt.SigningMethodHS256.Alg() {
-			return nil, errors.New("invalid algorithm or signing method")
-		}
-		return jwt_secret, nil
-	})
-
-	if err != nil {
-		if errors.Is(err, jwt.ErrTokenExpired) {
-			c.JSON(401, gin.H{
-				"valid":   false,
-				"message": "Token expired",
-			})
-			return
-		}
-		c.JSON(401, gin.H{
-			"valid":   false,
-			"message": "other error in validating claims",
-		})
-		return
-	}
-	_, ok := token.Claims.(*JWTClaims)
-	if !ok {
-		c.JSON(401, gin.H{
-			"valid":   false,
-			"message": "invalid claims format",
-		})
-		return
-	}
-
+	// if it made it to this point, the JWTAuthMiddleWare has already verified the token so were good
 	c.JSON(200, gin.H{
 		"valid": true,
 	})

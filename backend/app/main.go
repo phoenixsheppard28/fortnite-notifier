@@ -42,7 +42,7 @@ func main() {
 
 	authGroup := router.Group("/auth")
 	authGroup.GET("/telegram", TelegramAuthHandler)
-	authGroup.POST("/verify-jwt", VerifyJWT)
+	authGroup.POST("/verify-jwt", JWTAuthMiddleWare(cfg), VerifyJWT)
 
 	router.Run(cfg.PORT)
 	SetupWebhook(bot, cfg)
