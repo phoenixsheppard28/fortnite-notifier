@@ -1,35 +1,4 @@
-package main
-
-import (
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
-)
-
-type User struct {
-	ID           int64      `gorm:"column:id;type:int64;primaryKey;not null; unique"`                      // telegram account id num
-	UUID         uuid.UUID  `gorm:"uniqueIndex;column:uuid;type:uuid;default:uuid_generate_v4();not null"` // could depreciate after we do telegram tracking
-	TrackedItems []UserItem `gorm:"foreignKey:UserId"`
-	FirstName    string     `gorm:"column:first_name;type:varchar;"`
-}
-
-type UserItem struct { // join table
-	UserId int64  `gorm:"column:user_id;type:int64;index;primaryKey"`
-	ItemId string `gorm:"column:item_id;type:varchar;index;primaryKey"`
-}
-
-type FortniteItem struct {
-	ID             string     `gorm:"column:id;type:varchar;primaryKey;not null"`
-	Name           string     `gorm:"column:name;type:varchar;not null"`
-	Type           string     `gorm:"column:type;type:varchar"`
-	Price          uint       `gorm:"column:price;type:uint"`
-	Rarity         string     `gorm:"column:rarity;type:varchar;"`         // maybe should make an enum
-	Image          string     `gorm:"column:image;type:varchar;"`          // link to image
-	SetName        string     `gorm:"column:set;type:varchar"`             // should maybe make it a jsonb since the set is an object, can be null
-	LastAppearance string     `gorm:"column:last_appearance;type:varchar"` // form yyyy-mm-dd
-	Trackedby      []UserItem `gorm:"foreignKey:ItemId"`
-}
-
-// _____________________ FORNITE API ___________________________
+package models
 
 type FortniteAPIResponse struct {
 	Result bool       `json:"result"`
@@ -117,16 +86,4 @@ type BuiltInEmote struct {
 	Series      *GenericIdName `json:"series"`
 	Images      Images         `json:"images"`
 	Video       *string        `json:"video"` // nullable in your example
-}
-
-// ____________________ My API ________________
-
-type AddItemApiRequest struct {
-	Item_IDs []string `json:"item_ids"`
-}
-
-type JWTClaims struct {
-	Username string `json:"username,omitempty"`
-	Id       int64  `json:"id,omitempty"`
-	jwt.RegisteredClaims
 }

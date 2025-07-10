@@ -8,8 +8,8 @@ export async function VerifyJWT(jwt: string): Promise<boolean> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: jwt,
         },
-        body: JSON.stringify({ token: jwt }),
       },
     )
     if (!res.ok) return false
@@ -22,10 +22,10 @@ export async function VerifyJWT(jwt: string): Promise<boolean> {
 export type JwtPayload = {
   id: number
   username: string
-  exp?: number 
-  iat?: number 
-  nbf?: number 
-  iss?: string 
-  aud?: string | string[] 
-  sub?: string 
+  exp?: number
+  iat?: number
+  nbf?: number
+  iss?: string
+  aud?: string | string[]
+  sub?: string
 }

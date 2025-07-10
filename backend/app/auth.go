@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/phoenixsheppard28/fortnite-notifier/tree/main/backend/app/models"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +23,7 @@ func TelegramAuthHandler(c *gin.Context) {
 		})
 		return
 	}
-	cfg := cfgAny.(*Config)
+	cfg := cfgAny.(*models.Config)
 	dbAny, exists := c.Get("db")
 	if !exists {
 		c.AbortWithStatusJSON(500, gin.H{
@@ -92,9 +93,9 @@ func TelegramAuthHandler(c *gin.Context) {
 	c.Redirect(303, cfg.FRONTEND_URL+"?token="+jwt)
 }
 
-func createJWT(username string, id int64, cfg *Config) (string, error) {
+func createJWT(username string, id int64, cfg *models.Config) (string, error) {
 	jwt_secret := []byte(cfg.JWT_SECRET)
-	claims := JWTClaims{
+	claims := models.JWTClaims{
 		Username: username,
 		Id:       id,
 		RegisteredClaims: jwt.RegisteredClaims{

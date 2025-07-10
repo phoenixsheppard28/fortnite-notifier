@@ -1,5 +1,5 @@
 {
-    "help":"👋 Welcome to Fortnite-Item-Notifier! \nStay on top of the Fortnite Item Shop with real-time alerts for your favorite skins and cosmetics. \n*Available Commands:* \n\n /help: Lists commands \n /create: Creates an user profile if you dont already have one. \n /start: Sends your unqiue link to track cosmetics. Dont share this link! \n /rotate: Rotates your unique tracking link" ,
+    "help":"👋 Welcome to Fortnite-Item-Notifier! \nStay on top of the Fortnite Item Shop with real-time alerts for your favorite skins and cosmetics. \n*Available Commands:* \n\n /help: Lists commands \n /create: Creates an user profile if you dont already have one. \n /start: Sends the website link to track cosmetics!",
     "default":"That command doesent exist",
     "no_command":"This bot does not support traditional chatting. Type /help to see available commands",
 
@@ -9,6 +9,6 @@
     "success_creating_user":"Successfully created your user profile! Type /start to begin tracking cosmetics.",
     "user_already_exists":"A user profile already exists with your telegram ID. Type /start to begin tracking cosmetics!",
     "user_doesent_exist":"A user profile doesent exist for you. Type /create to make one!",
-    "/start_link": "Here's your unique link to start tracking cosmetics! Dont share this link, as anyone can use it to change your tracked cosmetics!\n",
-    "/rotate_link": "Your unique link has been successfully rotated! Type /start to recieve it!"
+    "/start_link": "Here's the link to start tracking cosmetics! You will be prompted to authenticate with telegram on the website to verify your identify.\n"
+    
 }

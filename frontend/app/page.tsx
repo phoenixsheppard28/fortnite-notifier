@@ -57,6 +57,7 @@ function LandingPageContent() {
       const exp = jwtDecode<JwtPayload>(jwt).iat
       console.log('User:', user)
       console.log(exp)
+      console.log(jwt)
       setUsername(user)
     }
   }, [jwt])
@@ -305,7 +306,9 @@ function LandingPageContent() {
 
 export default function LandingPage() {
   return (
-    <Suspense fallback={<div className="text-white text-center py-20">Loading...</div>}>
+    <Suspense
+      fallback={<div className="text-white text-center py-20">Loading...</div>}
+    >
       <LandingPageContent />
     </Suspense>
   )

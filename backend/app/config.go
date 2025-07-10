@@ -4,28 +4,15 @@ import (
 	"log"
 	"os"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
+	"github.com/phoenixsheppard28/fortnite-notifier/tree/main/backend/app/models"
 )
 
-type Config struct {
-	FN_API_KEY         string
-	FN_API_ENDPOINT    string
-	DB_STRING          string
-	TELEGRAM_TOKEN     string
-	PORT               string
-	PUBLIC_URL         string
-	WEBHOOK_OBFUSCATOR string
-	ADMIN_API_KEY      string
-	FRONTEND_URL       string
-	JWT_SECRET         string
-}
-
-func GetConfig() *Config {
+func GetConfig() *models.Config {
 	if err := godotenv.Load(".env.development"); err != nil {
 		log.Fatalf("Could not load env vars: %s", err)
 	}
-	return &Config{
+	return &models.Config{
 		FN_API_KEY:         os.Getenv("FN_API_KEY"),
 		FN_API_ENDPOINT:    os.Getenv("FN_API_ENDPOINT"),
 		DB_STRING:          os.Getenv("DB_STRING"),
@@ -36,25 +23,5 @@ func GetConfig() *Config {
 		ADMIN_API_KEY:      os.Getenv("ADMIN_API_KEY"),
 		FRONTEND_URL:       os.Getenv("FRONTEND_URL"),
 		JWT_SECRET:         os.Getenv("JWT_SECRET"),
-	}
-}
-
-func SetupWebhook(bot *tgbotapi.BotAPI, cfg *Config) {
-	wh, err := tgbotapi.NewWebhook(cfg.PUBLIC_URL + "/webhook" + cfg.WEBHOOK_OBFUSCATOR) // in dev webbook obfuscator is nothing lol
-	if err != nil {
-		log.Fatal("Could not create webhook")
-	}
-	_, err = bot.Request(wh) // register webhook with telegram
-	if err != nil {
-		panic(err)
-	}
-
-	info, err := bot.GetWebhookInfo() // check if it works
-	if err != nil {
-		panic(err)
-	}
-
-	if info.LastErrorDate != 0 {
-		log.Printf("Telegram callback failed: %s", info.LastErrorMessage)
 	}
 }

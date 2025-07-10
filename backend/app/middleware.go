@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/phoenixsheppard28/fortnite-notifier/tree/main/backend/app/models"
 	"gorm.io/gorm"
 )
 
@@ -23,14 +24,14 @@ func DBMiddleWare(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func CfgMiddleWare(cfg *Config) gin.HandlerFunc {
+func CfgMiddleWare(cfg *models.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("cfg", cfg)
 		c.Next()
 	}
 }
 
-func AdminAuthMiddleWare(cfg *Config) gin.HandlerFunc {
+func AdminAuthMiddleWare(cfg *models.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		api_key := c.GetHeader("x-api-key")
@@ -44,7 +45,8 @@ func AdminAuthMiddleWare(cfg *Config) gin.HandlerFunc {
 	}
 }
 
-func JWTAuthMiddleWare(cfg *Config) gin.HandlerFunc {
+func JWTAuthMiddleWare(cfg *models.Config) gin.HandlerFunc {
+	// if it passes this, user is GUARENTEED to exist, becase its confirmed in telegramauth with Userexits
 	return func(c *gin.Context) {
 
 		jwt_secret := []byte(cfg.JWT_SECRET)
@@ -59,7 +61,7 @@ func JWTAuthMiddleWare(cfg *Config) gin.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.ParseWithClaims(authToken, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(authToken, &models.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 			if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || method.Alg() != jwt.SigningMethodHS256.Alg() {
 				return nil, errors.New("invalid algorithm or signing method")
 			}
@@ -80,7 +82,7 @@ func JWTAuthMiddleWare(cfg *Config) gin.HandlerFunc {
 			})
 			return
 		}
-		_, ok := token.Claims.(*JWTClaims)
+		_, ok := token.Claims.(*models.JWTClaims)
 		if !ok {
 			c.AbortWithStatusJSON(401, gin.H{
 				"valid":   false,
@@ -88,6 +90,7 @@ func JWTAuthMiddleWare(cfg *Config) gin.HandlerFunc {
 			})
 			return
 		}
+		c.Set("jwt_claims", token.Claims.(*models.JWTClaims))
 		c.Next()
 	}
 }
