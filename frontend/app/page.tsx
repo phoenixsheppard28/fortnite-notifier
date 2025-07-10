@@ -16,15 +16,15 @@ import {
 import Link from 'next/link'
 import TelegramLoginButton from '@/components/TelegramLoginButtom'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import axios from 'axios'
 import { JwtPayload, VerifyJWT } from '@/utils/jwtUtils'
 import { jwtDecode } from 'jwt-decode'
 
-export default function LandingPage() {
+function LandingPageContent() {
   const [jwt, setJwt] = useState<string | null>(null)
   const [username, setUsername] = useState<string | null>(null)
-  const searchParams = useSearchParams() // <-- move hook here
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     async function verifyAndStoreJwt() {
@@ -50,11 +50,13 @@ export default function LandingPage() {
     }
     verifyAndStoreJwt()
   }, [searchParams])
-  
+
   useEffect(() => {
     if (jwt) {
       const user = jwtDecode<JwtPayload>(jwt).username
+      const exp = jwtDecode<JwtPayload>(jwt).iat
       console.log('User:', user)
+      console.log(exp)
       setUsername(user)
     }
   }, [jwt])
@@ -110,7 +112,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             {username ? (
               <span className="text-2xl font-semibold text-white flex items-center gap-2">
-                Welcome, <span className="text-blue-400">{username}</span>!
+                Welcome, <span className="text-blue-400">{username}</span>
               </span>
             ) : (
               <TelegramLoginButton />
@@ -298,5 +300,13 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+  )
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={<div className="text-white text-center py-20">Loading...</div>}>
+      <LandingPageContent />
+    </Suspense>
   )
 }
