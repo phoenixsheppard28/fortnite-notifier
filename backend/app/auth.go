@@ -16,22 +16,8 @@ import (
 )
 
 func TelegramAuthHandler(c *gin.Context) {
-	cfgAny, exists := c.Get("cfg")
-	if !exists {
-		c.AbortWithStatusJSON(500, gin.H{
-			"message": "internal server error",
-		})
-		return
-	}
-	cfg := cfgAny.(*models.Config)
-	dbAny, exists := c.Get("db")
-	if !exists {
-		c.AbortWithStatusJSON(500, gin.H{
-			"message": "internal server error",
-		})
-		return
-	}
-	db := dbAny.(*gorm.DB)
+	cfg := c.MustGet("cfg").(*models.Config)
+	db := c.MustGet("db").(*gorm.DB)
 
 	params := map[string]string{
 		"id":         c.Query("id"),

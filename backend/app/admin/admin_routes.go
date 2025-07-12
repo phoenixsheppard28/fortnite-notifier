@@ -12,22 +12,8 @@ import (
 )
 
 func RebuildItemDatabase(c *gin.Context) {
-	dbAny, exists := c.Get("db")
-	if !exists {
-		c.JSON(500, gin.H{
-			"message": "Could not retrieve database",
-		})
-		return
-	}
-	db := dbAny.(*gorm.DB)
-	cfgAny, exists := c.Get("cfg")
-	if !exists {
-		c.JSON(500, gin.H{
-			"message": "Could not retrieve config",
-		})
-		return
-	}
-	cfg := cfgAny.(*models.Config)
+	db := c.MustGet("db").(*gorm.DB)
+	cfg := c.MustGet("cfg").(*models.Config)
 
 	req, err := http.NewRequest("GET", cfg.FN_API_ENDPOINT+"v2/items/list", nil)
 	if err != nil {
@@ -107,4 +93,10 @@ func RebuildItemDatabase(c *gin.Context) {
 
 		return nil
 	})
+}
+
+func DailyShopCheck(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	cfg := c.MustGet("cfg").(*models.Config)
+
 }

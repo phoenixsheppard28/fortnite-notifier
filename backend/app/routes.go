@@ -18,24 +18,9 @@ func SayHello(c *gin.Context) {
 }
 
 func Webhook(c *gin.Context) {
-	botAny, exists := c.Get("bot")
-	if !exists {
-		log.Println("Could not retrieve telegram bot")
-		return
-	}
-	dbAny, exists := c.Get("db")
-	if !exists {
-		log.Println("Could not retrieve db")
-		return
-	}
-	cfgAny, exists := c.Get("cfg")
-	if !exists {
-		log.Printf("Could not retrieve config")
-		return
-	}
-	db := dbAny.(*gorm.DB)
-	bot := botAny.(*tgbotapi.BotAPI)
-	cfg := cfgAny.(*models.Config)
+	bot := c.MustGet("bot").(*tgbotapi.BotAPI)
+	db := c.MustGet("db").(*gorm.DB)
+	cfg := c.MustGet("cfg").(*models.Config)
 
 	var update tgbotapi.Update
 

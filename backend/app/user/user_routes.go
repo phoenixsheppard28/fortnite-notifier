@@ -11,14 +11,7 @@ import (
 )
 
 func TrackItem(c *gin.Context) {
-	dbAny, exists := c.Get("db")
-	if !exists {
-		c.AbortWithStatusJSON(500, gin.H{
-			"message": "Could not retrieve database",
-		})
-		return
-	}
-	db := dbAny.(*gorm.DB)
+	db := c.MustGet("db").(*gorm.DB)
 
 	jwtClaimsAny, exists := c.Get("jwt_claims")
 	if !exists {
