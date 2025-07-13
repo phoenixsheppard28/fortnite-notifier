@@ -12,7 +12,8 @@ import (
 func create(update *tgbotapi.Update, db *gorm.DB) (bool, error) {
 	// returns true if created new user
 	user_id := update.Message.From.ID
-	var user = models.User{ID: user_id}
+	first_name := update.Message.From.FirstName
+	var user = models.User{ID: user_id, FirstName: first_name}
 
 	user_exists, err := User_exists(user_id, db)
 	if err != nil {

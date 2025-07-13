@@ -46,7 +46,7 @@ func main() {
 
 	adminGroup := router.Group("/admin", AdminAuthMiddleWare(cfg))
 	adminGroup.POST("/item/rebuild", admin.RebuildItemDatabase)
-	adminGroup.POST("/item/alert")
+	adminGroup.POST("/item/alert", admin.DailyShopCheck)
 
 	authGroup := router.Group("/auth")
 	authGroup.GET("/telegram", TelegramAuthHandler)

@@ -9,6 +9,8 @@
     "success_creating_user":"Successfully created your user profile! Type /start to begin tracking cosmetics.",
     "user_already_exists":"A user profile already exists with your telegram ID. Type /start to begin tracking cosmetics!",
     "user_doesent_exist":"A user profile doesent exist for you. Type /create to make one!",
-    "/start_link": "Here's the link to start tracking cosmetics! You will be prompted to authenticate with telegram on the website to verify your identify.\n"
+    "/start_link": "Here's the link to start tracking cosmetics! You will be prompted to authenticate with telegram on the website to verify your identify.\n",
+    
+    "alert":"🚨 ALERT 🚨\nThe following items you have tracked are now in the shop:\n"
     
 }
