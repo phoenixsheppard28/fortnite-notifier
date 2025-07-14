@@ -1,14 +1,20 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 import {
   Bell,
   SettingsIcon,
@@ -21,16 +27,16 @@ import {
   AlertTriangle,
   CheckCircle,
   ArrowLeft,
-} from "lucide-react"
-import Link from "next/link"
+} from 'lucide-react'
+import Link from 'next/link'
 
 export default function Settings() {
   const [dailyNotifications, setDailyNotifications] = useState(true)
   const [instantAlerts, setInstantAlerts] = useState(true)
   const [legendaryOnly, setLegendaryOnly] = useState(false)
   const [epicAndAbove, setEpicAndAbove] = useState(true)
-  const [notificationTime, setNotificationTime] = useState("09:00")
-  const [language, setLanguage] = useState("en")
+  const [notificationTime, setNotificationTime] = useState('09:00')
+  const [language, setLanguage] = useState('en')
   const [telegramConnected, setTelegramConnected] = useState(true)
 
   return (
@@ -40,7 +46,10 @@ export default function Settings() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link href="/dashboard" className="flex items-center space-x-2 text-white hover:text-gray-300">
+              <Link
+                href="/dashboard"
+                className="flex items-center space-x-2 text-white hover:text-gray-300"
+              >
                 <ArrowLeft className="w-5 h-5" />
                 <span>Back to Dashboard</span>
               </Link>
@@ -69,18 +78,26 @@ export default function Settings() {
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-3 h-3 rounded-full ${telegramConnected ? "bg-green-400" : "bg-red-400"}`} />
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      telegramConnected ? 'bg-green-400' : 'bg-red-400'
+                    }`}
+                  />
                   <div>
                     <p className="text-white font-medium">
-                      {telegramConnected ? "Connected to Telegram" : "Not Connected"}
+                      {telegramConnected
+                        ? 'Connected to Telegram'
+                        : 'Not Connected'}
                     </p>
                     <p className="text-gray-400 text-sm">
-                      {telegramConnected ? "@FortniteNotifierBot" : "Connect to receive notifications"}
+                      {telegramConnected
+                        ? '@FortniteNotifierBot'
+                        : 'Connect to receive notifications'}
                     </p>
                   </div>
                 </div>
                 <Badge
-                  variant={telegramConnected ? "default" : "destructive"}
+                  variant={telegramConnected ? 'default' : 'destructive'}
                   className="bg-green-500/20 text-green-400"
                 >
                   {telegramConnected ? (
@@ -96,7 +113,10 @@ export default function Settings() {
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Resend Authorization
                 </Button>
@@ -120,10 +140,15 @@ export default function Settings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label htmlFor="daily-notifications" className="text-white font-medium">
+                      <Label
+                        htmlFor="daily-notifications"
+                        className="text-white font-medium"
+                      >
                         Daily Shop Updates
                       </Label>
-                      <p className="text-gray-400 text-sm">Get daily Item Shop summaries</p>
+                      <p className="text-gray-400 text-sm">
+                        Get daily Item Shop summaries
+                      </p>
                     </div>
                     <Switch
                       id="daily-notifications"
@@ -134,19 +159,32 @@ export default function Settings() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label htmlFor="instant-alerts" className="text-white font-medium">
+                      <Label
+                        htmlFor="instant-alerts"
+                        className="text-white font-medium"
+                      >
                         Instant Alerts
                       </Label>
-                      <p className="text-gray-400 text-sm">Immediate notifications for tracked items</p>
+                      <p className="text-gray-400 text-sm">
+                        Immediate notifications for tracked items
+                      </p>
                     </div>
-                    <Switch id="instant-alerts" checked={instantAlerts} onCheckedChange={setInstantAlerts} />
+                    <Switch
+                      id="instant-alerts"
+                      checked={instantAlerts}
+                      onCheckedChange={setInstantAlerts}
+                    />
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-white font-medium">Notification Time</Label>
-                    <p className="text-gray-400 text-sm mb-2">When to send daily updates</p>
+                    <Label className="text-white font-medium">
+                      Notification Time
+                    </Label>
+                    <p className="text-gray-400 text-sm mb-2">
+                      When to send daily updates
+                    </p>
                     <div className="flex items-center space-x-2">
                       <Clock className="w-4 h-4 text-gray-400" />
                       <Input
@@ -163,16 +201,24 @@ export default function Settings() {
               <Separator className="bg-white/10" />
 
               <div>
-                <h3 className="text-white font-medium mb-4">Item Rarity Filters</h3>
+                <h3 className="text-white font-medium mb-4">
+                  Item Rarity Filters
+                </h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="legendary-only" className="text-white">
                         Legendary Items Only
                       </Label>
-                      <p className="text-gray-400 text-sm">Only notify for legendary rarity items</p>
+                      <p className="text-gray-400 text-sm">
+                        Only notify for legendary rarity items
+                      </p>
                     </div>
-                    <Switch id="legendary-only" checked={legendaryOnly} onCheckedChange={setLegendaryOnly} />
+                    <Switch
+                      id="legendary-only"
+                      checked={legendaryOnly}
+                      onCheckedChange={setLegendaryOnly}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -180,9 +226,15 @@ export default function Settings() {
                       <Label htmlFor="epic-and-above" className="text-white">
                         Epic and Above
                       </Label>
-                      <p className="text-gray-400 text-sm">Notify for Epic and Legendary items</p>
+                      <p className="text-gray-400 text-sm">
+                        Notify for Epic and Legendary items
+                      </p>
                     </div>
-                    <Switch id="epic-and-above" checked={epicAndAbove} onCheckedChange={setEpicAndAbove} />
+                    <Switch
+                      id="epic-and-above"
+                      checked={epicAndAbove}
+                      onCheckedChange={setEpicAndAbove}
+                    />
                   </div>
                 </div>
               </div>
@@ -249,18 +301,24 @@ export default function Settings() {
                   <div>
                     <h4 className="text-white font-medium">Data Protection</h4>
                     <p className="text-gray-300 text-sm mt-1">
-                      Your tracking preferences are encrypted and stored securely. We never share your data with third
-                      parties.
+                      Your tracking preferences are encrypted and stored
+                      securely. We never share your data with third parties.
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
                   View Privacy Policy
                 </Button>
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
                   Export Data
                 </Button>
               </div>
@@ -278,12 +336,18 @@ export default function Settings() {
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-white font-medium">Clear All Tracked Items</h4>
+                  <h4 className="text-white font-medium">
+                    Clear All Tracked Items
+                  </h4>
                   <p className="text-gray-400 text-sm">
-                    Remove all items from your tracking list. This action cannot be undone.
+                    Remove all items from your tracking list. This action cannot
+                    be undone.
                   </p>
                 </div>
-                <Button variant="outline" className="border-red-500/50 text-red-400 hover:bg-red-500/10">
+                <Button
+                  variant="outline"
+                  className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Clear All Items
                 </Button>
@@ -293,8 +357,13 @@ export default function Settings() {
 
               <div>
                 <h4 className="text-white font-medium">Delete Account</h4>
-                <p className="text-gray-400 text-sm">Permanently delete your account and all associated data.</p>
-                <Button variant="destructive" className="mt-2 bg-red-600 hover:bg-red-700">
+                <p className="text-gray-400 text-sm">
+                  Permanently delete your account and all associated data.
+                </p>
+                <Button
+                  variant="destructive"
+                  className="mt-2 bg-red-600 hover:bg-red-700"
+                >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Account
                 </Button>

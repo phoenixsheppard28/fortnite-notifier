@@ -1,66 +1,78 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, Plus, Trash2, Bell, Clock, Star, Zap, Settings, LogOut, Calendar, TrendingUp } from "lucide-react"
-import Link from "next/link"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Search,
+  Plus,
+  Trash2,
+  Bell,
+  Clock,
+  Star,
+  Zap,
+  Settings,
+  LogOut,
+  Calendar,
+  TrendingUp,
+} from 'lucide-react'
+import Link from 'next/link'
 
 const mockTrackedItems = [
   {
     id: 1,
-    name: "Raven",
-    image: "/placeholder.svg?height=80&width=80",
-    rarity: "Legendary",
-    lastSeen: "3 days ago",
-    status: "tracking",
+    name: 'Raven',
+    image: '/placeholder.svg?height=80&width=80',
+    rarity: 'Legendary',
+    lastSeen: '3 days ago',
+    status: 'tracking',
   },
   {
     id: 2,
-    name: "Skull Trooper",
-    image: "/placeholder.svg?height=80&width=80",
-    rarity: "Epic",
-    lastSeen: "1 week ago",
-    status: "tracking",
+    name: 'Skull Trooper',
+    image: '/placeholder.svg?height=80&width=80',
+    rarity: 'Epic',
+    lastSeen: '1 week ago',
+    status: 'tracking',
   },
   {
     id: 3,
-    name: "Floss",
-    image: "/placeholder.svg?height=80&width=80",
-    rarity: "Rare",
-    lastSeen: "2 days ago",
-    status: "tracking",
+    name: 'Floss',
+    image: '/placeholder.svg?height=80&width=80',
+    rarity: 'Rare',
+    lastSeen: '2 days ago',
+    status: 'tracking',
   },
 ]
 
 const mockActivity = [
   {
     id: 1,
-    message: "Raven appeared in the Item Shop!",
-    time: "2 hours ago",
-    type: "alert",
+    message: 'Raven appeared in the Item Shop!',
+    time: '2 hours ago',
+    type: 'alert',
   },
   {
     id: 2,
-    message: "Daily shop update received",
-    time: "1 day ago",
-    type: "update",
+    message: 'Daily shop update received',
+    time: '1 day ago',
+    type: 'update',
   },
   {
     id: 3,
-    message: "Skull Trooper was added to tracking",
-    time: "3 days ago",
-    type: "action",
+    message: 'Skull Trooper was added to tracking',
+    time: '3 days ago',
+    type: 'action',
   },
 ]
 
 export default function Dashboard() {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState('')
   const [dailyNotifications, setDailyNotifications] = useState(true)
 
   return (
@@ -74,7 +86,9 @@ export default function Dashboard() {
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <Bell className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold text-white">Fortnite Notifier</span>
+                <span className="text-xl font-bold text-white">
+                  Fortnite Notifier
+                </span>
               </Link>
             </div>
 
@@ -91,12 +105,20 @@ export default function Dashboard() {
               </div>
 
               <Link href="/settings">
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/10"
+                >
                   <Settings className="w-5 h-5" />
                 </Button>
               </Link>
 
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/10"
+              >
                 <LogOut className="w-5 h-5" />
               </Button>
             </div>
@@ -188,24 +210,40 @@ export default function Dashboard() {
                     >
                       <div className="flex items-center space-x-4">
                         <img
-                          src={item.image || "/placeholder.svg"}
+                          src={item.image || '/placeholder.svg'}
                           alt={item.name}
                           className="w-16 h-16 rounded-lg object-cover"
                         />
                         <div>
-                          <h3 className="text-white font-semibold">{item.name}</h3>
+                          <h3 className="text-white font-semibold">
+                            {item.name}
+                          </h3>
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge
                               variant="secondary"
                               className={`
-                                ${item.rarity === "Legendary" ? "bg-orange-500/20 text-orange-400" : ""}
-                                ${item.rarity === "Epic" ? "bg-purple-500/20 text-purple-400" : ""}
-                                ${item.rarity === "Rare" ? "bg-blue-500/20 text-blue-400" : ""}
+                                ${
+                                  item.rarity === 'Legendary'
+                                    ? 'bg-orange-500/20 text-orange-400'
+                                    : ''
+                                }
+                                ${
+                                  item.rarity === 'Epic'
+                                    ? 'bg-purple-500/20 text-purple-400'
+                                    : ''
+                                }
+                                ${
+                                  item.rarity === 'Rare'
+                                    ? 'bg-blue-500/20 text-blue-400'
+                                    : ''
+                                }
                               `}
                             >
                               {item.rarity}
                             </Badge>
-                            <span className="text-gray-400 text-sm">Last seen {item.lastSeen}</span>
+                            <span className="text-gray-400 text-sm">
+                              Last seen {item.lastSeen}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -271,19 +309,24 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {mockActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-3">
+                    <div
+                      key={activity.id}
+                      className="flex items-start space-x-3"
+                    >
                       <div
                         className={`w-2 h-2 rounded-full mt-2 ${
-                          activity.type === "alert"
-                            ? "bg-green-400"
-                            : activity.type === "update"
-                              ? "bg-blue-400"
-                              : "bg-gray-400"
+                          activity.type === 'alert'
+                            ? 'bg-green-400'
+                            : activity.type === 'update'
+                            ? 'bg-blue-400'
+                            : 'bg-gray-400'
                         }`}
                       />
                       <div className="flex-1">
                         <p className="text-white text-sm">{activity.message}</p>
-                        <p className="text-gray-400 text-xs mt-1">{activity.time}</p>
+                        <p className="text-gray-400 text-xs mt-1">
+                          {activity.time}
+                        </p>
                       </div>
                     </div>
                   ))}

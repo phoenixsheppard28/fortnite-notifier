@@ -1,10 +1,10 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { UserX, AlertTriangle, ArrowLeft, UserPlus } from "lucide-react";
-import Link from "next/link";
-import TelegramLoginButton from "@/components/TelegramLoginButtom";
+'use client'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { UserX, AlertTriangle, ArrowLeft, UserPlus } from 'lucide-react'
+import Link from 'next/link'
+import TelegramLoginButton from '@/components/TelegramLoginButtom'
 
 export default function UserNotCreatedPage() {
   return (
@@ -35,7 +35,6 @@ export default function UserNotCreatedPage() {
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-2xl mx-auto text-center">
           {/* Warning Badge */}
-          
 
           {/* Main Message */}
           <div className="mb-8">
@@ -48,9 +47,14 @@ export default function UserNotCreatedPage() {
             </h1>
 
             <p className="text-xl text-gray-300 mb-8">
-              It looks like you don't have an account yet. Type <code>/create</code> into chat with {" "}  
-              <a href="https://t.me/fortniteshopskinbot" style={{ textDecoration: "underline" }}>
-              https://t.me/fortniteshopskinbot</a>
+              It looks like you don't have an account yet. Type{' '}
+              <code>/create</code> into chat with{' '}
+              <a
+                href="https://t.me/fortniteshopskinbot"
+                style={{ textDecoration: 'underline' }}
+              >
+                https://t.me/fortniteshopskinbot
+              </a>
             </p>
           </div>
 
@@ -66,16 +70,27 @@ export default function UserNotCreatedPage() {
               </h2>
 
               <p className="text-gray-300 mb-2">
-              We use the bot <a href="https://t.me/fortniteshopskinbot" className="underline">@fortniteshopskinbot</a> to manage accounts and associate it with your unique Telegram ID.
-               Follow these steps:
-            </p>
+                We use the bot{' '}
+                <a
+                  href="https://t.me/fortniteshopskinbot"
+                  className="underline"
+                >
+                  @fortniteshopskinbot
+                </a>{' '}
+                to manage accounts and associate it with your unique Telegram
+                ID. Follow these steps:
+              </p>
               <ol className="text-gray-300 list-decimal list-inside space-y-1 mb-6">
-                <li>Begin chat with the bot, then type <code>/create</code></li>
-                <li>Return to this website (you can get the url from the bot with <code>/link</code>)</li>
+                <li>
+                  Begin chat with the bot, then type <code>/create</code>
+                </li>
+                <li>
+                  Return to this website (you can get the url from the bot with{' '}
+                  <code>/link</code>)
+                </li>
                 <li>Click the Telegram login widget like you did before</li>
                 <li>Happy tracking!</li>
               </ol>
-              
             </CardContent>
           </Card>
 
@@ -127,5 +142,5 @@ export default function UserNotCreatedPage() {
         </div>
       </section>
     </div>
-  );
+  )
 }
