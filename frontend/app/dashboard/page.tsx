@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { checkAndStoreJwt, checkJwt } from '@/utils/jwtCheck'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -74,6 +76,19 @@ const mockActivity = [
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [dailyNotifications, setDailyNotifications] = useState(true)
+  const router = useRouter()
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { jwt, username } = await checkJwt()
+      if (!jwt) {
+        router.replace('/users/not-signed-in')
+      }
+      setUsername(username ?? '')
+    }
+    checkAuth()
+  }, [router])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
@@ -94,13 +109,9 @@ export default function Dashboard() {
 
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3 bg-white/10 rounded-lg px-4 py-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
                 <div className="text-sm">
-                  <div className="text-white font-medium">@john_doe</div>
-                  <div className="text-gray-400">Connected</div>
+                  <div className="text-white font-medium">{username}</div>
+                  <div className="text-gray-400">Signed In</div>
                 </div>
               </div>
 
@@ -113,14 +124,6 @@ export default function Dashboard() {
                   <Settings className="w-5 h-5" />
                 </Button>
               </Link>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/10"
-              >
-                <LogOut className="w-5 h-5" />
-              </Button>
             </div>
           </div>
         </div>

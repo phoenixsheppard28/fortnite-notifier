@@ -18,8 +18,9 @@ import TelegramLoginButton from '@/components/TelegramLoginButtom'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import axios from 'axios'
-import { JwtPayload, VerifyJWT } from '@/utils/jwtUtils'
+import { checkAndStoreJwt } from '@/utils/jwtCheck'
 import { jwtDecode } from 'jwt-decode'
+import { JwtPayload } from '@/utils/jwtUtils'
 
 function LandingPageContent() {
   const [jwt, setJwt] = useState<string | null>(null)
@@ -27,28 +28,11 @@ function LandingPageContent() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    async function verifyAndStoreJwt() {
-      let just_verified: boolean = false
-
-      const currJwt = searchParams.get('token')
-      if (currJwt) {
-        const valid: boolean = await VerifyJWT(currJwt)
-        if (valid) {
-          localStorage.setItem('jwt', currJwt)
-          just_verified = true
-        }
-      }
-
-      const storedJwt = localStorage.getItem('jwt')
-      if (storedJwt) {
-        if (just_verified) {
-          setJwt(storedJwt)
-        } else {
-          setJwt((await VerifyJWT(storedJwt)) ? storedJwt : null)
-        }
-      }
+    async function runJwtCheck() {
+      const { jwt } = await checkAndStoreJwt(searchParams)
+      setJwt(jwt)
     }
-    verifyAndStoreJwt()
+    runJwtCheck()
   }, [searchParams])
 
   useEffect(() => {

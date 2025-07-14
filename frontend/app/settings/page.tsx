@@ -29,6 +29,9 @@ import {
   ArrowLeft,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { checkJwt } from '@/utils/jwtCheck'
+import { useEffect } from 'react'
 
 export default function Settings() {
   const [dailyNotifications, setDailyNotifications] = useState(true)
@@ -38,7 +41,17 @@ export default function Settings() {
   const [notificationTime, setNotificationTime] = useState('09:00')
   const [language, setLanguage] = useState('en')
   const [telegramConnected, setTelegramConnected] = useState(true)
+  const router = useRouter()
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { jwt } = await checkJwt()
+      if (!jwt) {
+        router.replace('/users/not-signed-in')
+      }
+    }
+    checkAuth()
+  }, [router])
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Header */}
