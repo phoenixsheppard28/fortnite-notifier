@@ -12,15 +12,7 @@ import (
 
 func TrackItem(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-
-	jwtClaimsAny, exists := c.Get("jwt_claims")
-	if !exists {
-		c.AbortWithStatusJSON(500, gin.H{
-			"message": "Could not retrieve JWT claims",
-		})
-		return
-	}
-	jwtClaims := jwtClaimsAny.(*models.JWTClaims)
+	jwtClaims := c.MustGet("jwt_claims").(*models.JWTClaims)
 
 	var reqbody models.AddItemApiRequest
 	err := c.ShouldBindJSON(&reqbody)
@@ -71,4 +63,30 @@ func TrackItem(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "successfully tracked new items",
 	})
+}
+
+func DeleteUser(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	jwtClaims := c.MustGet("jwt_claims").(*models.JWTClaims)
+
+	user := models.User{ID: jwtClaims.Id}
+
+	if err := db.Delete(&user).Error; err != nil {
+		c.AbortWithStatusJSON(500, gin.H{
+			"message": "Failed to delete user",
+		})
+		return
+	}
+}
+
+func DeleteAllItems(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	jwtClaims := c.MustGet("jwt_claims").(*models.JWTClaims)
+
+	if err := db.Where("user_id = ?", jwtClaims.Id).Delete(models.UserItem{}).Error; err != nil {
+		c.AbortWithStatusJSON(500, gin.H{
+			"message": "Failed to clear user items",
+		})
+		return
+	}
 }

@@ -3,7 +3,7 @@ package models
 type User struct {
 	ID           int64      `gorm:"column:id;type:bigint;primaryKey;not null; unique"` // telegram account id num
 	FirstName    string     `gorm:"column:first_name;type:varchar;"`
-	TrackedItems []UserItem `gorm:"foreignKey:UserId"`
+	TrackedItems []UserItem `gorm:"constraint:OnDelete:CASCADE;foreignKey:UserId"`
 }
 
 type UserItem struct { // join table
@@ -20,5 +20,5 @@ type FortniteItem struct {
 	Image          string     `gorm:"column:image;type:varchar;"`          // link to image
 	SetName        string     `gorm:"column:set;type:varchar"`             // should maybe make it a jsonb since the set is an object, can be null
 	LastAppearance string     `gorm:"column:last_appearance;type:varchar"` // form yyyy-mm-dd
-	Trackedby      []UserItem `gorm:"foreignKey:ItemId"`
+	Trackedby      []UserItem `gorm:"constraint:OnDelete:CASCADE;foreignKey:ItemId"`
 }

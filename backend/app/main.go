@@ -55,6 +55,8 @@ func main() {
 	UserGroup := router.Group("/user")
 	UserGroup.Use(JWTAuthMiddleWare(cfg))
 	UserGroup.POST("/item", user.TrackItem)
+	UserGroup.DELETE("/item/all", user.DeleteAllItems)
+	UserGroup.DELETE("/me", user.DeleteUser)
 	// corresponding get method
 
 	SetupWebhook(bot, cfg)

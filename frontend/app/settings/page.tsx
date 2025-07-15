@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+// ...existing code...
+import { call_backend } from '@/utils/call_backend'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -27,11 +29,13 @@ import {
   AlertTriangle,
   CheckCircle,
   ArrowLeft,
+  ArrowLeftFromLine,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { checkJwt } from '@/utils/jwtCheck'
 import { useEffect } from 'react'
+import { set } from 'date-fns'
 
 export default function Settings() {
   const [dailyNotifications, setDailyNotifications] = useState(true)
@@ -40,15 +44,18 @@ export default function Settings() {
   const [epicAndAbove, setEpicAndAbove] = useState(true)
   const [notificationTime, setNotificationTime] = useState('09:00')
   const [language, setLanguage] = useState('en')
-  const [telegramConnected, setTelegramConnected] = useState(true)
+  const [jwt, setJwt] = useState<string | null>(null)
+  const [username, setUsername] = useState('')
   const router = useRouter()
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { jwt } = await checkJwt()
+      const { jwt, username } = await checkJwt()
       if (!jwt) {
         router.replace('/users/not-signed-in')
       }
+      setUsername(username ?? '')
+      setJwt(jwt)
     }
     checkAuth()
   }, [router])
@@ -80,12 +87,12 @@ export default function Settings() {
 
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="space-y-8">
-          {/* Telegram Connection */}
+          {/* Authentication Status */}
           <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                Telegram Bot Connection
+                <Shield className="w-5 h-5" />
+                Authentication Status
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -93,54 +100,41 @@ export default function Settings() {
                 <div className="flex items-center space-x-3">
                   <div
                     className={`w-3 h-3 rounded-full ${
-                      telegramConnected ? 'bg-green-400' : 'bg-red-400'
+                      username ? 'bg-green-400' : 'bg-red-400'
                     }`}
                   />
                   <div>
                     <p className="text-white font-medium">
-                      {telegramConnected
-                        ? 'Connected to Telegram'
-                        : 'Not Connected'}
+                      {username
+                        ? `Signed in with Telegram @${username}`
+                        : 'Not Signed In'}
                     </p>
                     <p className="text-gray-400 text-sm">
-                      {telegramConnected
-                        ? '@FortniteNotifierBot'
-                        : 'Connect to receive notifications'}
+                      {username
+                        ? `Your session is active`
+                        : 'Please sign in to continue'}
                     </p>
                   </div>
                 </div>
-                <Badge
-                  variant={telegramConnected ? 'default' : 'destructive'}
-                  className="bg-green-500/20 text-green-400"
-                >
-                  {telegramConnected ? (
-                    <>
-                      <CheckCircle className="w-3 h-3 mr-1" /> Active
-                    </>
-                  ) : (
-                    <>
-                      <AlertTriangle className="w-3 h-3 mr-1" /> Inactive
-                    </>
-                  )}
-                </Badge>
               </div>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Resend Authorization
-                </Button>
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                  Test Connection
-                </Button>
-              </div>
+            </CardContent>
+            <CardContent className="flex justify-start">
+              <Button
+                variant="outline"
+                className="border-black-400/50 text-black-400 hover:bg-gray-500/10"
+                onClick={() => {
+                  localStorage.removeItem('jwt')
+                  router.replace('/')
+                }}
+                disabled={!username}
+              >
+                <ArrowLeftFromLine className="w-4 h-4 mr-2" />
+                Log Out
+              </Button>
             </CardContent>
           </Card>
 
-          {/* Notification Settings */}
+          {/* Notification Settings
           <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
@@ -252,91 +246,7 @@ export default function Settings() {
                 </div>
               </div>
             </CardContent>
-          </Card>
-
-          {/* General Settings */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <SettingsIcon className="w-5 h-5" />
-                General Settings
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label className="text-white">Language</Label>
-                  <Select value={language} onValueChange={setLanguage}>
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                      <Globe className="w-4 h-4 mr-2" />
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="es">Español</SelectItem>
-                      <SelectItem value="fr">Français</SelectItem>
-                      <SelectItem value="de">Deutsch</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-white">Time Zone</Label>
-                  <Select defaultValue="est">
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                      <Clock className="w-4 h-4 mr-2" />
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="est">Eastern (EST)</SelectItem>
-                      <SelectItem value="pst">Pacific (PST)</SelectItem>
-                      <SelectItem value="cst">Central (CST)</SelectItem>
-                      <SelectItem value="mst">Mountain (MST)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Privacy & Security */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                Privacy & Security
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                <div className="flex items-start space-x-3">
-                  <Shield className="w-5 h-5 text-blue-400 mt-0.5" />
-                  <div>
-                    <h4 className="text-white font-medium">Data Protection</h4>
-                    <p className="text-gray-300 text-sm mt-1">
-                      Your tracking preferences are encrypted and stored
-                      securely. We never share your data with third parties.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
-                >
-                  View Privacy Policy
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
-                >
-                  Export Data
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Danger Zone */}
           <Card className="bg-red-500/5 border-red-500/20 backdrop-blur-sm">
@@ -353,13 +263,35 @@ export default function Settings() {
                     Clear All Tracked Items
                   </h4>
                   <p className="text-gray-400 text-sm">
-                    Remove all items from your tracking list. This action cannot
-                    be undone.
+                    Remove all items from your tracking list.
                   </p>
                 </div>
                 <Button
                   variant="outline"
                   className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                  onClick={async () => {
+                    if (
+                      !window.confirm(
+                        'Are you sure you want to clear all tracked items? This action cannot be undone.',
+                      )
+                    )
+                      return
+                    try {
+                      const res = await call_backend({
+                        method: 'DELETE',
+                        jwt,
+                        path: '/user/item/all',
+                      })
+                      if (res.ok) {
+                        alert('All tracked items cleared!')
+                      } else {
+                        alert('Failed to clear items.')
+                      }
+                    } catch (err) {
+                      alert('Error clearing items.')
+                    }
+                  }}
+                  disabled={!username}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Clear All Items
@@ -371,11 +303,37 @@ export default function Settings() {
               <div>
                 <h4 className="text-white font-medium">Delete Account</h4>
                 <p className="text-gray-400 text-sm">
-                  Permanently delete your account and all associated data.
+                  Permanently delete your account and all associated data. This
+                  action cannot be undone
                 </p>
                 <Button
                   variant="destructive"
                   className="mt-2 bg-red-600 hover:bg-red-700"
+                  onClick={async () => {
+                    if (
+                      !window.confirm(
+                        'Are you sure you want to delete your account? This action cannot be undone.',
+                      )
+                    )
+                      return
+                    try {
+                      const res = await call_backend({
+                        method: 'DELETE',
+                        jwt,
+                        path: '/user/me',
+                      })
+                      if (res.ok) {
+                        alert('Account deleted successfully!')
+                        localStorage.removeItem('jwt')
+                        router.replace('/')
+                      } else {
+                        alert('Failed to delete account.')
+                      }
+                    } catch (err) {
+                      alert('Error deleting account.')
+                    }
+                  }}
+                  disabled={!username}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Account
@@ -383,14 +341,6 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Save Changes
-            </Button>
-          </div>
         </div>
       </div>
     </div>

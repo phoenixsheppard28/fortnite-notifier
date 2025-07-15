@@ -162,20 +162,6 @@ export default function Dashboard() {
                   </div>
                 </CardContent>
               </Card>
-
-              <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Success Rate</p>
-                      <p className="text-2xl font-bold text-white">98%</p>
-                    </div>
-                    <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                      <TrendingUp className="w-6 h-6 text-green-400" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Item Tracking Section */}
