@@ -9,8 +9,10 @@ import (
 )
 
 func GetConfig() *models.Config {
-	if err := godotenv.Load(".env.development"); err != nil {
-		log.Fatalf("Could not load env vars: %s", err)
+	if os.Getenv("GO_ENV") == "" { // development
+		if err := godotenv.Load(".env.development"); err != nil {
+			log.Fatalf("Could not load env vars: %s", err)
+		}
 	}
 	return &models.Config{
 		FN_API_KEY:         os.Getenv("FN_API_KEY"),
