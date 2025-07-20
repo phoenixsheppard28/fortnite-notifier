@@ -59,12 +59,12 @@ export async function checkJwt(): Promise<{
     return { jwt: null, username: null }
   }
 
-  // Only verify with server if not expired locally
-  const valid = await VerifyJWT(storedJwt)
-  if (!valid) {
-    localStorage.removeItem('jwt')
-    return { jwt: null, username: null }
-  }
+  // // Only verify with server if not expired locally
+  // const valid = await VerifyJWT(storedJwt)
+  // if (!valid) {
+  //   localStorage.removeItem('jwt')
+  //   return { jwt: null, username: null }
+  // }
 
   let username: string | null = null
   try {
