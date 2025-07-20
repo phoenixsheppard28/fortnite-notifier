@@ -12,5 +12,5 @@ jobs:
     steps: 
       - name: Make API call
         run : |
-          curl -X POST '${{secrets.BACKEND_URL}}/admin/item/rebuild'  \ 
+          curl -X POST '${{secrets.BACKEND_URL}}/admin/item/rebuild'  \
            -H 'x-api-key: ${{secrets.ADMIN_API_KEY}}' 
