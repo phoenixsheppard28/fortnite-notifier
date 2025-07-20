@@ -43,7 +43,7 @@ func main() {
 
 	var webhook_string = "/webhook"
 	if cfg.WEBHOOK_OBFUSCATOR != "" {
-		webhook_string = webhook_string + "/" + cfg.WEBHOOK_OBFUSCATOR
+		webhook_string = webhook_string + cfg.WEBHOOK_OBFUSCATOR
 	}
 	router.POST(webhook_string, Webhook)
 	router.GET("/", SayHello)
