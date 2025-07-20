@@ -9,6 +9,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/phoenixsheppard28/fortnite-notifier/tree/main/backend/app/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func RebuildItemDatabase(c *gin.Context) {
@@ -51,9 +52,8 @@ func RebuildItemDatabase(c *gin.Context) {
 	}
 
 	db.Transaction(func(tx *gorm.DB) error {
-		tx.Where("1=1").Delete(&models.FortniteItem{}) // clear table
 
-		var itemsToInsert []models.FortniteItem
+		var itemsToUpsert []models.FortniteItem
 		for _, item := range apiResponse.Items {
 			if slices.Contains(item.GameplayTags, "Cosmetics.Source.ItemShop") && item.ReleaseDate != nil {
 				var dbItem = models.FortniteItem{
@@ -71,13 +71,17 @@ func RebuildItemDatabase(c *gin.Context) {
 					dbItem.LastAppearance = *item.LastAppearance
 				}
 
-				itemsToInsert = append(itemsToInsert, dbItem)
+				itemsToUpsert = append(itemsToUpsert, dbItem)
 
 			}
 		}
-		if err := tx.CreateInBatches(&itemsToInsert, 100).Error; err != nil {
+
+		if err := tx.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "id"}},
+			DoUpdates: clause.AssignmentColumns([]string{"name", "type", "price", "rarity", "image", "set", "last_appearance"}),
+		}).CreateInBatches(&itemsToUpsert, 100).Error; err != nil {
 			c.JSON(500, gin.H{
-				"message": "Could not rebuild item database",
+				"message": "Could not upsert item database",
 				"error":   err.Error(),
 			})
 			return err
