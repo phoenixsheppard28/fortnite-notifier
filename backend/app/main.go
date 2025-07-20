@@ -55,7 +55,10 @@ func main() {
 	UserGroup := router.Group("/user")
 	UserGroup.Use(JWTAuthMiddleWare(cfg))
 	UserGroup.POST("/item", user.TrackItem)
+	UserGroup.GET("/item", user.SearchItem)
+	UserGroup.GET("/item/all", user.GetTrackedItems)
 	UserGroup.DELETE("/item/all", user.DeleteAllItems)
+	UserGroup.DELETE("/item", user.UntrackItem)
 	UserGroup.DELETE("/me", user.DeleteUser)
 	// corresponding get method
 

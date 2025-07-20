@@ -47,18 +47,34 @@ export default function Settings() {
   const [jwt, setJwt] = useState<string | null>(null)
   const [username, setUsername] = useState('')
   const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { jwt, username } = await checkJwt()
-      if (!jwt) {
+      try {
+        const { jwt, username } = await checkJwt()
+        if (!jwt) {
+          router.replace('/users/not-signed-in')
+          return
+        }
+        setUsername(username ?? '')
+        setIsAuthenticated(true)
+      } catch (error) {
+        console.error('Auth check failed:', error)
         router.replace('/users/not-signed-in')
       }
-      setUsername(username ?? '')
-      setJwt(jwt)
     }
     checkAuth()
   }, [router])
+
+  // Show loading screen while checking authentication
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Header */}

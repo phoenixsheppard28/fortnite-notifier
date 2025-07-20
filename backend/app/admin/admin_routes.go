@@ -21,11 +21,13 @@ func RebuildItemDatabase(c *gin.Context) {
 			"message": "error sending the api request",
 			"error":   err.Error(),
 		})
+		return
 	}
 	if resp.StatusCode != 200 {
 		c.AbortWithStatusJSON(500, gin.H{
 			"message": "External API returned a status code not 200",
 		})
+		return
 	}
 
 	defer resp.Body.Close() // runs at the end of this function
@@ -96,11 +98,13 @@ func DailyShopCheck(c *gin.Context) {
 			"message": "error sending the api request",
 			"error":   err.Error(),
 		})
+		return
 	}
 	if resp.StatusCode != 200 {
 		c.AbortWithStatusJSON(500, gin.H{
 			"message": "External API returned a status code not 200",
 		})
+		return
 	}
 	defer resp.Body.Close() // runs at the end of this function
 	body, err := io.ReadAll(resp.Body)
