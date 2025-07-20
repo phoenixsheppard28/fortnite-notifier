@@ -60,7 +60,6 @@ export default function Settings() {
         setUsername(username ?? '')
         setIsAuthenticated(true)
       } catch (error) {
-        console.error('Auth check failed:', error)
         router.replace('/users/not-signed-in')
       }
     }

@@ -59,6 +59,7 @@ export default function Dashboard() {
   const router = useRouter()
   const [username, setUsername] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoadingItems, setIsLoadingItems] = useState(true)
 
   // Search function with debounce
   const searchItems = useCallback(async (query: string) => {
@@ -71,7 +72,6 @@ export default function Dashboard() {
     try {
       const jwt = localStorage.getItem('jwt')
       if (!jwt) {
-        console.error('No JWT found')
         return
       }
 
@@ -89,13 +89,10 @@ export default function Dashboard() {
       if (response.ok) {
         const data = await response.json()
         setSearchResults(data['items'])
-        console.table(data['items'])
       } else {
-        console.error('Search failed:', response.statusText)
         setSearchResults([])
       }
     } catch (error) {
-      console.error('Search error:', error)
       setSearchResults([])
     } finally {
       setIsSearching(false)
@@ -123,7 +120,6 @@ export default function Dashboard() {
       try {
         const jwt = localStorage.getItem('jwt')
         if (!jwt) {
-          console.error('No JWT found')
           return
         }
 
@@ -142,7 +138,6 @@ export default function Dashboard() {
         )
 
         if (response.ok) {
-          console.log('Item tracked successfully')
           // Optionally refresh the tracked items or show success message
           setTrackedItems((prev) => new Set([...prev, itemId]))
           // Add the tracked item to the allTrackedItems array
@@ -153,10 +148,8 @@ export default function Dashboard() {
             setAllTrackedItems((prev) => [...prev, trackedItem])
           }
         } else {
-          console.error('Failed to track item:', response.statusText)
         }
       } catch (error) {
-        console.error('Track item error:', error)
       } finally {
         setTrackingItems((prev) => {
           const newSet = new Set(prev)
@@ -175,7 +168,6 @@ export default function Dashboard() {
     try {
       const jwt = localStorage.getItem('jwt')
       if (!jwt) {
-        console.error('No JWT found')
         return
       }
 
@@ -194,7 +186,6 @@ export default function Dashboard() {
       )
 
       if (response.ok) {
-        console.log('Item untracked successfully')
         // Optionally refresh the tracked items or show success message
         setTrackedItems((prev) => {
           const newSet = new Set(prev)
@@ -204,10 +195,8 @@ export default function Dashboard() {
         // Remove the untracked item from the allTrackedItems array
         setAllTrackedItems((prev) => prev.filter((item) => item.ID !== itemId))
       } else {
-        console.error('Failed to untrack item:', response.statusText)
       }
     } catch (error) {
-      console.error('Untrack item error:', error)
     } finally {
       setUntrackingItems((prev) => {
         const newSet = new Set(prev)
@@ -219,10 +208,10 @@ export default function Dashboard() {
 
   // Fetch all tracked items function
   const fetchAllTrackedItems = useCallback(async () => {
+    setIsLoadingItems(true)
     try {
       const jwt = localStorage.getItem('jwt')
       if (!jwt) {
-        console.error('No JWT found')
         return
       }
 
@@ -243,12 +232,11 @@ export default function Dashboard() {
         // Also populate the trackedItems set with the IDs for button state management
         const itemIds = data['items']?.map((item: any) => item.ID) || []
         setTrackedItems(new Set(itemIds))
-        console.log('Fetched tracked items:', data['items'])
       } else {
-        console.error('Failed to fetch tracked items:', response.statusText)
       }
     } catch (error) {
-      console.error('Fetch tracked items error:', error)
+    } finally {
+      setIsLoadingItems(false)
     }
   }, [])
 
@@ -257,13 +245,14 @@ export default function Dashboard() {
     try {
       const { jwt, username } = await checkJwt()
       if (!jwt) {
+        setIsLoadingItems(false)
         router.replace('/users/not-signed-in')
         return
       }
       setUsername(username ?? '')
       setIsAuthenticated(true)
     } catch (error) {
-      console.error('Auth check failed:', error)
+      setIsLoadingItems(false)
       router.replace('/users/not-signed-in')
     }
   }, [router])
@@ -278,8 +267,8 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, fetchAllTrackedItems])
 
-  // Show loading screen while checking authentication
-  if (!isAuthenticated) {
+  // Show loading screen while checking authentication or loading items
+  if (!isAuthenticated || isLoadingItems) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
@@ -352,10 +341,18 @@ export default function Dashboard() {
                     placeholder="Search Fortnite items to track..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                   />
+                  {searchQuery && !isSearching && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
                   {isSearching && (
-                    <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                     </div>
                   )}

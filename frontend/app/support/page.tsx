@@ -56,7 +56,7 @@ export default function SupportPage() {
           .
         </p>
         <p className="mt-8 text-gray-400 text-sm">
-          We aim to respond to all inquiries within 48 hours.
+          I aim to respond to all inquiries within 48 hours.
         </p>
       </main>
       <footer className="border-t border-white/10 bg-black/20 backdrop-blur-sm">

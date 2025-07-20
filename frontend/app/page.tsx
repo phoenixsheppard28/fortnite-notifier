@@ -39,9 +39,9 @@ function LandingPageContent() {
     if (jwt) {
       const user = jwtDecode<JwtPayload>(jwt).username
       const exp = jwtDecode<JwtPayload>(jwt).iat
-      console.log('User:', user)
-      console.log(exp)
-      console.log(jwt)
+      // console.log('User:', user)
+      // console.log(exp)
+      // console.log(jwt)
       setUsername(user)
     }
   }, [jwt])
@@ -98,28 +98,12 @@ function LandingPageContent() {
               <TelegramLoginButton />
             )}
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2">10K+</div>
-              <div className="text-gray-400">Active Users</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2">50K+</div>
-              <div className="text-gray-400">Items Tracked</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2">99.9%</div>
-              <div className="text-gray-400">Uptime</div>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="text-center mb-16">
+      <section className="container mx-auto px-4 py-10">
+        <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">How It Works</h2>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
             Get started in three simple steps and never miss your favorite items
