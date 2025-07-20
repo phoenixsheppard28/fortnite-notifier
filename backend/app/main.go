@@ -41,7 +41,11 @@ func main() {
 	router := gin.Default()
 	router.Use(BotMiddleWare(bot), DBMiddleWare(db), CfgMiddleWare(cfg), cors.New(cors_cfg))
 
-	router.POST("/webhook", Webhook)
+	var webhook_string = "/webhook"
+	if cfg.WEBHOOK_OBFUSCATOR != "" {
+		webhook_string = webhook_string + "/" + cfg.WEBHOOK_OBFUSCATOR
+	}
+	router.POST(webhook_string, Webhook)
 	router.GET("/", SayHello)
 
 	adminGroup := router.Group("/admin", AdminAuthMiddleWare(cfg))
