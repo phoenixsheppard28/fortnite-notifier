@@ -2,6 +2,7 @@
 
 Fortnite-Notifier is a Telegram bot that notifies you when specific items appear in the Fortnite Item Shop. If you're waiting for a rare skin or want to catch limited-time cosmetics, this bot provides automated alerts directly to your Telegram chat.
 
+Note, the api I used to develop this is now offline, so this project is now depreciated :(
 ---
 
 ## Features
